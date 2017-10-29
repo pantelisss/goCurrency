@@ -7,4 +7,6 @@ import (
 
 func main() {
   	fmt.Println("Retrieving from ", manager.Shared().Url)
+
+  	manager.Shared().GetJson()
 }
