@@ -11,7 +11,11 @@ import (
 
 type manager struct {
 	Url string
+	Ids []string
+	Coins []models.Coin
 }
+
+var Ids []string
 
 var sharedManager *manager
 var once sync.Once
@@ -31,16 +35,21 @@ func (m *manager) GetJson() {
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
-	var coins []models.Coin	
-	json.Unmarshal(body,&coins)
-	fmt.Println("get:\n", coins[0])
+	
+	json.Unmarshal(body,&m.Coins)
+	fmt.Println("get:\n", m.Coins[0])
   	
-  	var ids []string
-  	for _, v := range coins {
-  		ids = append(ids, v.Id) 		
+  	for _, v := range m.Coins {
+  		m.Ids = append(m.Ids, v.Id) 		
   	} 	
   	
-  	fmt.Println("All ids:\n", ids)
+  	fmt.Println("All ids:\n", m.Ids)
 
   	defer resp.Body.Close()
+  }
+
+  func (m *manager) JsonData()(d []byte) {
+  	data, _ := json.Marshal(m.Coins)
+
+  	return data
   }
